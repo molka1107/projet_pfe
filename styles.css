@@ -1,0 +1,91 @@
+/* couleur ta les choix ta les options */
+.st-b6 {
+    color: #555555;
+}
+
+
+/* les titres ta3 assiatnt h1,détection h2 et les titres ta sidebar h3 */
+h1,h2,h3{
+    color: #555555 !important;  
+    font-family: 'Serif', sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/* couleur ta texte ta choissisez une option,démarrer et arreter cam */
+div[data-testid="stMarkdownContainer"] p {
+    color: #000000 !important;  
+    font-weight: normal;      
+    font-family: 'Serif', sans-serif; 
+}
+div[data-testid="stMarkdownContainer"].st-emotion-cache-14pnosh p {
+    color: #555555 !important;  
+    font-weight: bold;          
+    font-family: 'Serif', sans-serif; 
+}
+.st-emotion-cache-sy3zga {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: table-cell;
+    font-weight: bold;
+}
+.st-bl {
+    padding-right: 0.5rem;
+    font-weight: bold;
+}
+
+
+/* bouton démarrer et arreter cam */
+.stButton>button {
+    background-color:  #1560c9!important;  
+    color: #000000 !important;  
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);  
+}
+.stButton>button:hover {
+    background-color: #4c89df !important;  
+}
+
+
+/* Ajouter le logo Avaxia */
+section[data-testid="stSidebar"]::before {
+    content: "";
+    display: block;
+    background-image: url("https://www.avaxiagroup.com/wp-content/themes/poey-custom-wp/assets/img/avaxia-logo.svg"); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 70%;
+    height: 70px; 
+    margin-bottom: 0px; /* Espacement entre le logo et les autres éléments */
+    margin-top: 10px;
+    margin-left: 45px;
+    margin-right: 35px;
+}
+
+
+/* hethe bouton ta browse files */
+.st-emotion-cache-2rl6g8 {
+    display: inline-flex;
+    -moz-box-align: center;
+    align-items: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    min-height: 2.5rem;
+    margin: 0px;
+    line-height: 1.6;
+    color: inherit;
+    width: auto;
+    user-select: none;
+    background-color: rgb(233, 98, 45);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+
