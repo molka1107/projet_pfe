@@ -1,9 +1,9 @@
 pipeline {    
     agent any
-    environment {
-        DOCKER_HUB_REPO = 'ghofranebj/stationski_backend'  // Docker Hub repository
-        DOCKER_HUB_CREDENTIALS = 'DockerToken'  // Docker Hub credentials ID in Jenkins
-    }
+    //environment {
+        //DOCKER_HUB_REPO = 'ghofranebj/stationski_backend'  // Docker Hub repository
+        //DOCKER_HUB_CREDENTIALS = 'DockerToken'  // Docker Hub credentials ID in Jenkins
+    //}
    
     stages {  
         stage('Checkout') {
