@@ -12,6 +12,14 @@ pipeline {
             }        
         }
 
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest'
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 script {
