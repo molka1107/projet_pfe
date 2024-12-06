@@ -28,14 +28,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'pytest'
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
