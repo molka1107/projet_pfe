@@ -12,9 +12,19 @@ pipeline {
             }        
         }
 
-        stage('Maven Compile') {
+        stage('Install Dependencies') {
             steps {
-                sh 'mvn clean compile'
+                script {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest'
+                }
             }
         }
 
