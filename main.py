@@ -5,7 +5,7 @@ from torchvision.transforms import Compose, Resize
 import torch.nn.functional as F
 import sys
 import signal  
-sys.path.append('/home/molka/Bureau/stage/assistant virtuel pour personnes malvoyantes/yolov7')
+sys.path.append('/home/molka/Bureau/stage/projet_pfe/yolov7')
 from yolov7.models.experimental import attempt_load
 from depth_anything.dpt import DepthAnything
 from depth_anything.util.transform import Resize, NormalizeImage, PrepareForNet
@@ -133,7 +133,7 @@ center_exclude_factor_h = 0.4
 
 
 # Charger le fichier audio pour l'alarme
-alarm_sound = sa.WaveObject.from_wave_file('/home/molka/Bureau/stage/assistant virtuel pour personnes malvoyantes/bip.wav')
+alarm_sound = sa.WaveObject.from_wave_file('/home/molka/Bureau/stage/projet_pfe/bip.wav')
 alarm_playing = None
 
 
@@ -142,7 +142,9 @@ if 'cap' not in st.session_state:
     st.session_state.cap = None
 
 
-st.sidebar.title(f"Bienvenue 🖐")
+st.sidebar.markdown("""
+# Bienvenue <img src="https://cdn-icons-png.flaticon.com/128/2339/2339864.png" alt="Hand Icon" width="40">
+""", unsafe_allow_html=True)
 st.sidebar.header("Options")
 option = st.sidebar.selectbox("Choisissez une option", ["Caméra", "Importer une image", "Importer une vidéo"])
 st.sidebar.header("Confidence")

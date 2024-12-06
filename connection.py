@@ -13,5 +13,5 @@ def create_connection():
         if connection.is_connected():
             return connection
     except Error as e:
-        st.error(f"Error while connecting to MySQL: {e}")
+        st.error(f"Erreur lors de la connexion à MySQL: {e}")
     return None

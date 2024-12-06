@@ -5,15 +5,12 @@ Truck
 bicycle
 branch
 car
-chair
-clock
 crosswalk
 door
 elevator
 fire_hydrant
 green_light
 gun
-handbag
 motorcycle
 person
 pothole
