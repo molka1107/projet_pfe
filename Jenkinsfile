@@ -15,7 +15,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'bash -c "source /opt/anaconda3/etc/profile.d/conda.sh && conda activate stage && pip install -r requirements.txt"'
+                    sh 'conda activate stage && pip install -r requirements.txt'
                 }
             }
         }
