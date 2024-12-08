@@ -12,16 +12,17 @@ pipeline {
             }        
         }
 
-        stage('SonarQube Analysis') {
+       stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('Sonar') {
-                        // Analyse SonarQube pour un projet Python
-                        sh 'sonar-scanner -Dsonar.projectKey=mon-projet-pfe -Dsonar.sources=src -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.token=$SONAR_TOKEN -Dsonar.host.url=http://localhost:9000'
+                script {
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
                     }
                 }
             }
         }
+
 
         stage('Install Dependencies') {
             steps {
