@@ -11,11 +11,21 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
+
+           stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
+                }
+            }
+        }
+
+
         stage('Docker Run') {
             steps {
                 echo 'Running Docker container...'
-                echo "Image Docker : ${DOCKER_HUB_REPO}:latest"
-               // sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit ${DOCKER_HUB_REPO}:latest'
                 sh 'docker run -d --name mon-app-streamlit -p 8501:8501 ${DOCKER_HUB_REPO}:latest'
 
             }
@@ -70,16 +80,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                echo 'Building Docker image...'
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                    sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
-                }
-            }
-        }
-
+     
         
          stage('SonarQube Analysis') {
             steps {
