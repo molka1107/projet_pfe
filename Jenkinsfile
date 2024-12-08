@@ -1,7 +1,7 @@
 pipeline {    
     agent any
     environment {
-        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit '  
+        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
     }
    
@@ -18,6 +18,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                     sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
+
                 }
             }
         }
