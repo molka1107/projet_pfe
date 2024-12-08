@@ -11,8 +11,35 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
+         stage('Install Dependencies') {
+            steps {
+                script { 
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest'
+                }
+            }
+        }
 
-           stage('Docker Build') {
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
+
+       
+        stage('Docker Build') {
             steps {
                 echo 'Building Docker image...'
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -51,21 +78,7 @@ pipeline {
         }
          
      
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'pytest'
-                }
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                script { 
-                    sh 'pip3 install -r requirements.txt'
-                }
-            }
-        }
+    
 
 
         
@@ -83,16 +96,7 @@ pipeline {
 
      
         
-         stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
+         
 
 
       stage('Start Prometheus') {
