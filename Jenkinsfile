@@ -15,10 +15,12 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
+                    sh 'apt-get update && apt-get install -y python3-pip'  // Si tu utilises une machine Ubuntu
                     sh 'pip install -r requirements.txt'
                 }
             }
         }
+
 
          stage('Run Tests') {
             steps {
