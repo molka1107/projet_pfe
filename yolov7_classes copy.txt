@@ -12,12 +12,10 @@ fire_hydrant
 green_light
 gun
 motorcycle
-person
 pothole
 rat
 red_light
 scooter
-sheep
 stairs
 stop_sign
 suitcase
@@ -25,6 +23,5 @@ traffic light
 traffic_cone
 train
 tree
-truck
 umbrella
 yellow_light

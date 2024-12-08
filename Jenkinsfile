@@ -1,9 +1,9 @@
 pipeline {    
     agent any
-    //environment {
-        //DOCKER_HUB_REPO = 'ghofranebj/stationski_backend'  // Docker Hub repository
-        //DOCKER_HUB_CREDENTIALS = 'DockerToken'  // Docker Hub credentials ID in Jenkins
-    //}
+    environment {
+        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit '  
+        DOCKER_HUB_CREDENTIALS = 'DockerToken' 
+    }
    
     stages {  
         stage('Checkout') {
@@ -12,18 +12,18 @@ pipeline {
             }        
         }
 
-        stage('Run Tests') {
+        stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'pytest'
+                    sh 'pip install -r requirements.txt'
                 }
             }
         }
 
-        stage('Install Dependencies') {
+         stage('Run Tests') {
             steps {
                 script {
-                    sh 'conda activate stage && pip install -r requirements.txt'
+                    sh 'pytest tests'
                 }
             }
         }
@@ -56,13 +56,13 @@ pipeline {
                 }
             }
         }
-stage('Docker Run') {
-    steps {
-        echo 'Running Docker container...'
-        sh 'docker run -d -p 8089:8089 --name backend-container-${BUILD_ID} ${DOCKER_HUB_REPO}:latest'
-    }
-}
 
+        stage('Docker Run') {
+            steps {
+                echo 'Running Docker container...'
+                sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit-${BUILD_ID} ${DOCKER_HUB_REPO}:latest'
+            }
+        }
 
         stage('Push Docker Image to Docker Hub') {
             steps {
@@ -74,15 +74,15 @@ stage('Docker Run') {
         }
 
       stage('Deploy with Docker Compose') {
-    steps {
-        script {
-            echo "Starting Docker Compose"
-            sh "docker-compose -f docker-compose.yml up -d" // Adjust if necessary
+            steps {
+                script {
+                    echo "Starting Docker Compose"
+                    sh "docker-compose -f docker-compose.yml up -d" // Adjust if necessary
+                }
+            }
         }
-    }
-}
 
-        stage('Start Prometheus') {
+      stage('Start Prometheus') {
             steps {
                 script {
                     echo "Starting Prometheus"
