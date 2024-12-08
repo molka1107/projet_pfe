@@ -11,18 +11,31 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
-
-          stage('SonarQube Analysis') {
+        stage('Docker Run') {
             steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
+                echo 'Running Docker container...'
+                sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit-${BUILD_ID} ${DOCKER_HUB_REPO}:latest'
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh 'docker push ${DOCKER_HUB_REPO}:latest'
                 }
             }
         }
 
+      stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    echo "Starting Docker Compose"
+                    sh "docker-compose -f docker-compose.yml up -d" // Adjust if necessary
+                }
+            }
+        }
+         
      
         stage('Run Tests') {
             steps {
@@ -64,30 +77,18 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
-            steps {
-                echo 'Running Docker container...'
-                sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit-${BUILD_ID} ${DOCKER_HUB_REPO}:latest'
-            }
-        }
-
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                    sh 'docker push ${DOCKER_HUB_REPO}:latest'
-                }
-            }
-        }
-
-      stage('Deploy with Docker Compose') {
+        
+         stage('SonarQube Analysis') {
             steps {
                 script {
-                    echo "Starting Docker Compose"
-                    sh "docker-compose -f docker-compose.yml up -d" // Adjust if necessary
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
+                    }
                 }
             }
         }
+
 
       stage('Start Prometheus') {
             steps {
