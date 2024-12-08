@@ -12,16 +12,7 @@ pipeline {
             }        
         }
 
-       stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
+     
 
 
         stage('Install Dependencies') {
@@ -37,7 +28,19 @@ pipeline {
          stage('Run Tests') {
             steps {
                 script {
-                    sh 'pytest tests'
+                    sh 'pytest'
+                }
+            }
+        }
+
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
+                    }
                 }
             }
         }
