@@ -11,13 +11,7 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
-         stage('Install Dependencies') {
-            steps {
-                script { 
-                    sh 'pip install -r requirements.txt'
-                }
-            }
-        }
+      
         stage('Run Tests') {
             steps {
                 script {
@@ -80,7 +74,13 @@ pipeline {
      
     
 
-
+        stage('Install Dependencies') {
+            steps {
+                script { 
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
         
 
 
