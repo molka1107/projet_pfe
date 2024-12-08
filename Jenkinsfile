@@ -13,24 +13,24 @@ pipeline {
         }
 
      
-
-
-        stage('Install Dependencies') {
-            steps {
-                script { 
-                    sh 'pip install -r requirements.txt'
-                }
-            }
-        }
-
-
-         stage('Run Tests') {
+        stage('Run Tests') {
             steps {
                 script {
                     sh 'pytest'
                 }
             }
         }
+
+        stage('Install Dependencies') {
+            steps {
+                script { 
+                    sh 'pip3 install -r requirements.txt'
+                }
+            }
+        }
+
+
+        
 
 
         stage('SonarQube Analysis') {
