@@ -12,10 +12,21 @@ pipeline {
             }        
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('Sonar') {
+                        // Analyse SonarQube pour un projet Python
+                        sh 'sonar-scanner -Dsonar.projectKey=mon-projet-pfe -Dsonar.sources=src -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.token=$SONAR_TOKEN -Dsonar.host.url=http://localhost:9000'
+                    }
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'apt-get update && apt-get install -y python3-pip'  // Si tu utilises une machine Ubuntu
+                    sh 'apt-get update && apt-get install -y python3-pip'  
                     sh 'pip install -r requirements.txt'
                 }
             }
@@ -26,16 +37,6 @@ pipeline {
             steps {
                 script {
                     sh 'pytest tests'
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('Sonar') {
-                        sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN -Dsonar.host.url=http://localhost:9000 -Dsonar.java.binaries=target/classes'
-                    }
                 }
             }
         }
