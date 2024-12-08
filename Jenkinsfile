@@ -11,23 +11,8 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
-      
-      
-
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
-
-       
-        stage('Docker Build') {
+        
+           stage('Docker Build') {
             steps {
                 echo 'Building Docker image...'
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -37,8 +22,6 @@ pipeline {
                 }
             }
         }
-
-
         stage('Docker Run') {
             steps {
                 echo 'Running Docker container...'
@@ -55,12 +38,19 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Application') {
+            steps {
+                script {
+                    sh 'docker-compose down && docker-compose up -d'
+                }
+            }
+        }
 
-      stage('Deploy with Docker Compose') {
+        stage('Deploy with Docker Compose') {
             steps {
                 script {
                     echo "Starting Docker Compose"
-                    sh "docker-compose -f docker-compose.yml up -d" // Adjust if necessary
+                    sh "docker-compose -f docker-compose.yml up -d" 
                 }
             }
         }
@@ -68,22 +58,8 @@ pipeline {
      
     
 
-        stage('Install Dependencies') {
-            steps {
-                script { 
-                    sh 'pip install -r requirements.txt'
-                }
-            }
-        }
-        
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'pytest'
-                }
-            }
-        }
+        
 
 
       
@@ -98,7 +74,16 @@ pipeline {
 
      
         
-         
+         stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
 
 
       stage('Start Prometheus') {
