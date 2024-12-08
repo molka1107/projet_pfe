@@ -12,13 +12,7 @@ pipeline {
             }        
         }
       
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'pytest'
-                }
-            }
-        }
+      
 
 
         stage('SonarQube Analysis') {
@@ -82,6 +76,14 @@ pipeline {
             }
         }
         
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest'
+                }
+            }
+        }
 
 
       
