@@ -12,6 +12,17 @@ pipeline {
             }        
         }
 
+          stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
+
      
         stage('Run Tests') {
             steps {
@@ -33,17 +44,7 @@ pipeline {
         
 
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
-
+      
         stage('Deploy to Nexus') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'NexusToken', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
