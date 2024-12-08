@@ -14,7 +14,7 @@ pipeline {
         stage('Docker Run') {
             steps {
                 echo 'Running Docker container...'
-                sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit-${BUILD_ID} ${DOCKER_HUB_REPO}:latest'
+                sh 'docker run -d --name  mon-app-streamlit  -p 8501:8501 mon-app-streamlit ${DOCKER_HUB_REPO}:latest'
             }
         }
 
