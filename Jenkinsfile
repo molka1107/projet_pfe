@@ -1,4 +1,5 @@
 pipeline {    
+
     agent any
     environment {
         DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
@@ -6,13 +7,14 @@ pipeline {
     }
    
     stages {  
-        stage('Checkout') {
+
+        stage('Git') {
             steps {  
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
         
-           stage('Docker Build') {
+        stage('Docker Build') {
             steps {
                 echo 'Building Docker image...'
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -22,6 +24,7 @@ pipeline {
                 }
             }
         }
+
         stage('Docker Run') {
             steps {
                 echo 'Running Docker container...'
@@ -38,10 +41,11 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy Application') {
             steps {
                 script {
-                    sh 'docker-compose down && docker-compose up -d'
+                    sh 'docker compose down && docker compose up -d'
                 }
             }
         }
@@ -50,7 +54,7 @@ pipeline {
             steps {
                 script {
                     echo "Starting Docker Compose"
-                    sh "docker-compose -f docker-compose.yml up -d" 
+                    sh "docker compose -f docker-compose.yml up -d"
                 }
             }
         }
