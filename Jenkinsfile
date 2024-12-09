@@ -2,7 +2,7 @@ pipeline {
 
     agent any
     environment {
-        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
+        DOCKER_HUB_REPO = 'molka11/mon-app'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
     }
    
@@ -13,6 +13,15 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
+
+           stage('Install Dependencies') {
+            steps {
+                script {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+
         
         stage('Docker Build') {
             steps {
@@ -54,14 +63,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    sh 'pip install -r requirements.txt'
-                }
-            }
-        }
-
+     
       
          
      
