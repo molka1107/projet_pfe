@@ -2,7 +2,7 @@ pipeline {
 
     agent any
     environment {
-        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
+        DOCKER_HUB_REPO = 'molka11/mon-app'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
     }
   
@@ -81,16 +81,16 @@ pipeline {
     post {
         always {
             emailext (
-                subject: "Pipeline Notification for Project",
+                subject: "Notification de pipeline pour le projet",
                 body: """
-                    Hello,
+                    Bonjour,
 
-                    The Jenkins pipeline has completed with the following status: ${currentBuild.currentResult}.
+                    Le pipeline Jenkins a été exécuté avec le statut suivant : ${currentBuild.currentResult}.
                 
-                    You can view the build details at ${env.BUILD_URL}.
+                    Vous pouvez consulter les détails de la build à l'adresse suivante : ${env.BUILD_URL}.
 
-                    Thank you,
-                    The DevOps Team
+                    Merci,
+                    L'équipe DevOps
                 """,
                 to: 'molka.zahra@esprit.tn'
             )
