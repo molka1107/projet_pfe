@@ -41,20 +41,20 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy Application') {
-            steps {
-                script {
-                    sh 'docker compose down && docker compose up -d'
-                }
-            }
-        }
-
+        
         stage('Deploy with Docker Compose') {
             steps {
                 script {
                     echo "Starting Docker Compose"
                     sh "docker compose -f docker-compose.yml up -d"
+                }
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                script {
+                    sh 'docker compose down && docker compose up -d'
                 }
             }
         }
