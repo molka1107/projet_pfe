@@ -2,10 +2,8 @@ pipeline {
 
     agent any
     environment {
-        DOCKER_HUB_REPO = 'molka11/mon-app'  
+        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
-        SONAR_TOKEN = 'SonarToken'
-        SONAR_HOST_URL = 'http://localhost:9000' 
     }
   
     stages {  
@@ -15,46 +13,7 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
-
-        stage('SonarQube Analysis') {
-                steps {
-                    echo "Running SonarQube Analysis..."
-                    withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv('Sonar') {
-                            sh """
-                                sonar-scanner \
-                                    -Dsonar.projectKey=projet_pfe \
-                                    -Dsonar.sources=. \
-                                    -Dsonar.host.url=$SONAR_HOST_URL \
-                                    -Dsonar.login=$SONAR_TOKEN
-                            """
-                        }
-                    }
-                }
-            }
-
-
-
-       stage('Install Dependencies') {
-            steps {
-                script {
-                    sh '''
-                    bash -c "
-                    python3 -m venv venv
-                    source venv/bin/activate
-                    pip install -r requirements.txt
-                    "
-                    '''
-                }
-            }
-        }
-
-
-
-
-
-
-        
+     
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -95,50 +54,47 @@ pipeline {
             }
         }
 
-     
-      
-         
-     
-    
-
-
-        
-
-
-      
-        stage('Deploy to Nexus') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'NexusToken', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    echo "Deploying to Nexus"
-                    sh 'mvn deploy -DskipTests -DaltDeploymentRepository=deploymentRepo::default::http://localhost:8081/repository/maven-releases/ -Dusername=$NEXUS_USERNAME -Dpassword=$NEXUS_PASSWORD'
+        stage('Start Prometheus') {
+                steps {
+                    script {
+                        sh "docker start prometheus"
+                    }
                 }
             }
-        }
-
-     
-       
-
-      stage('Start Prometheus') {
-            steps {
-                script {
-                    echo "Starting Prometheus"
-                    sh "docker start prometheus"
-                }
-            }
-        }
 
         stage('Start Grafana') {
             steps {
                 script {
-                    echo "Starting Grafana"
                     sh "docker start grafana"
                 }
             }
         }
 
+       
+  
+
     
 
       
     }
+
+    post {
+        always {
+            emailext (
+                subject: "Pipeline Notification for Project",
+                body: """
+                    Hello,
+
+                    The Jenkins pipeline has completed with the following status: ${currentBuild.currentResult}.
+                
+                    You can view the build details at ${env.BUILD_URL}.
+
+                    Thank you,
+                    The DevOps Team
+                """,
+                to: 'molka.zahra@esprit.tn'
+            )
+        }
+}
 
 }
