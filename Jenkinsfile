@@ -16,9 +16,7 @@ pipeline {
         
         stage('Docker Build') {
             steps {
-                echo 'Building Docker image...'
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                     sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
 
                 }
@@ -27,26 +25,15 @@ pipeline {
 
         stage('Docker Run') {
             steps {
-                echo 'Running Docker container...'
                 sh 'docker run -d --name mon-app-streamlit -p 8501:8501 ${DOCKER_HUB_REPO}:latest'
 
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Push Docker Image To Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                     sh 'docker push ${DOCKER_HUB_REPO}:latest'
-                }
-            }
-        }
-        
-        stage('Deploy with Docker Compose') {
-            steps {
-                script {
-                    echo "Starting Docker Compose"
-                    sh "docker compose -f docker-compose.yml up -d"
                 }
             }
         }
@@ -58,6 +45,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy With Docker Compose') {
+            steps {
+                script {
+                    sh "docker compose -f docker-compose.yml up -d"
+                }
+            }
+        }
+
+      
          
      
     
