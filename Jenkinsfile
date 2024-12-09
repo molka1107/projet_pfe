@@ -4,8 +4,10 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'molka11/mon-app'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
+        SONAR_TOKEN = 'SonarToken'
+        SONAR_HOST_URL = 'http://localhost:9000' 
     }
-   
+  
     stages {  
 
         stage('Git') {
@@ -13,6 +15,13 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
+
+        stage('SonarQube Analysis') { 
+            steps { echo "Running SonarQube Analysis..." 
+            withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')])
+            { withSonarQubeEnv('Sonar') { sh """ sonar-scanner \ -Dsonar.projectKey=projet_pfe \ -Dsonar.sources=. \ -Dsonar.host.url=$SONAR_HOST_URL \ -Dsonar.login=$SONAR_TOKEN """ } } } }  
+
+
        stage('Install Dependencies') {
             steps {
                 script {
