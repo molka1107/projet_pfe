@@ -16,13 +16,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh '''
-                    python3 -m venv venv
-                    venv/bin/pip install -r requirements.txt
-                    '''
+                    sh 'docker run --rm -v $PWD:/app -w /app python:3.9 bash -c "pip install -r requirements.txt"'
                 }
             }
         }
+
 
 
 
