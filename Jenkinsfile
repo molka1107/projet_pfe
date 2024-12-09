@@ -16,7 +16,11 @@ pipeline {
             }        
         }
 
-        
+        stage('SonarQube Analysis') { 
+            steps { echo "Running SonarQube Analysis..." 
+            withCredentials([string(credentialsId: 'SonarToken', variable: 'SONAR_TOKEN')])
+            { withSonarQubeEnv('Sonar') { sh """ sonar-scanner \ -Dsonar.projectKey=projet_pfe \ -Dsonar.sources=. \ -Dsonar.host.url=$SONAR_HOST_URL \ -Dsonar.login=$SONAR_TOKEN """ } } } }  
+
 
        stage('Install Dependencies') {
             steps {
