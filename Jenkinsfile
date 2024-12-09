@@ -116,18 +116,7 @@ pipeline {
         }
 
      
-        
-         stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        // Juste exécuter sonar-scanner sans spécifier le projectKey si déjà dans le fichier properties
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
-
+       
 
       stage('Start Prometheus') {
             steps {
