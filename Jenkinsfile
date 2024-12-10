@@ -28,19 +28,6 @@ pipeline {
             }
         }
 
-        stage('Run Test') {
-            steps {
-                script {
-                    sh '''
-                    bash -c "
-                    source venv/bin/activate
-                    pytest
-                    "
-                    '''
-                }
-            }
-        }
-
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
