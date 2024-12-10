@@ -4,7 +4,7 @@ import numpy as np
 from torchvision.transforms import Compose, Resize
 import torch.nn.functional as F
 import sys
-sys.path.append('/home/molka/Bureau/stage/assistant virtuel pour personnes malvoyantes/yolov7')
+sys.path.append('/home/molka/Bureau/stage/projet_pfe/yolov7')
 from yolov7.models.experimental import attempt_load
 from depth_anything.dpt import DepthAnything
 from depth_anything.util.transform import Resize, NormalizeImage, PrepareForNet
@@ -41,7 +41,7 @@ imgsz = check_img_size(320, s=stride)
 
 
 # Classes pour la détection d'objets
-with open("yolov7_classes.txt", "r") as f:
+with open("classes.txt", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 
@@ -76,7 +76,7 @@ center_exclude_factor_h = 0.4
 
 
 # Charger le fichier audio pour l'alarme
-alarm_sound = sa.WaveObject.from_wave_file('/home/molka/Bureau/stage/assistant virtuel pour personnes malvoyantes/bip.wav')
+alarm_sound = sa.WaveObject.from_wave_file('/home/molka/Bureau/stage/projet_pfe/bip.wav')
 alarm_playing = None
 
 

@@ -81,7 +81,7 @@ imgsz = check_img_size(320, s=stride)
 
 
 # Classes pour la détection d'objets
-with open("yolov7_classes.txt", "r") as f:
+with open("classes.txt", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 

@@ -1,0 +1,24 @@
+Bicycle
+Branch
+Bus
+Bushes
+Car
+Crosswalk
+Door
+Elevator
+Fire hydrant
+Green light
+Gun
+Motorcycle
+Person
+Pothole
+Rat
+Red light
+Scooter
+Stop sign
+Traffic cone
+Train
+Tree
+Truck
+Yellow light
+
