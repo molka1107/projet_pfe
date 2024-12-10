@@ -31,7 +31,12 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
-                    sh 'pytest'
+                    sh '''
+                    bash -c "
+                    source venv/bin/activate
+                    pytest
+                    "
+                    '''
                 }
             }
         }
