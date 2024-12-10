@@ -13,7 +13,21 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/molka1107/projet_pfe.git', credentialsId: 'GitToken'
             }        
         }
-     
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh '''
+                    bash -c "
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install -r requirements.txt
+                    "
+                    '''
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {

@@ -16,10 +16,7 @@ pothole
 rat
 red_light
 scooter
-stairs
 stop_sign
-suitcase
-traffic light
 traffic_cone
 train
 tree
