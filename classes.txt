@@ -1,24 +1,37 @@
-Bicycle
-Branch
+
 Bus
 Bushes
-Car
-Crosswalk
-Door
-Elevator
-Fire hydrant
-Green light
-Gun
-Motorcycle
 Person
-Pothole
-Rat
-Red light
-Scooter
-Stop sign
-Traffic cone
-Train
-Tree
 Truck
-Yellow light
 
+
+bicycle
+
+branch
+car
+
+
+crosswalk
+door
+elevator
+fire_hydrant
+green_light
+gun
+
+motorcycle
+
+pothole
+rat
+red_light
+scooter
+
+
+stop_sign
+
+
+traffic_cone
+train
+tree
+
+
+yellow_light

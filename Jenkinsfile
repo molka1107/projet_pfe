@@ -28,6 +28,14 @@ pipeline {
             }
         }
 
+        stage('Run Test') {
+            steps {
+                script {
+                    sh 'pytest'
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
