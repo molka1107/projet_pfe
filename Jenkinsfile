@@ -2,7 +2,7 @@ pipeline {
 
     agent any
     environment {
-        DOCKER_HUB_REPO = 'molka11/mon-app'  
+        DOCKER_HUB_REPO = 'molka11/mon-app-streamlit'  
         DOCKER_HUB_CREDENTIALS = 'DockerToken' 
     }
   
