@@ -152,7 +152,7 @@ confidence = st.sidebar.slider("Choisissez une confidence", min_value =0.0,max_v
 st.sidebar.header("IoU")
 iou_threshold = st.sidebar.slider("Choisissez une valeur d'IoU", min_value=0.0, max_value=1.0, value=0.5)
 st.sidebar.header("Classes")
-options = ["all objects"] + classes
+options = ["all objects"] + [cls for cls in classes if cls != "None"]
 default_classes = ["all objects"]
 selected_classes = st.sidebar.multiselect("Choisissez les classes pour la détection",options=options,default=default_classes)
 if "all objects" in selected_classes:
@@ -285,7 +285,7 @@ if option == "Caméra":
                     det[:, :4] = scale_coords(img.shape[2:], det[:, :4], frame.shape).round()
                     for *xyxy, conf, cls in reversed(det):
                         label = f'{classes[int(cls)]} : {conf:.2f}'
-                        color = (0, 255, 0)
+                        color = (255, 255, 153)
                         x, y, x2, y2 = int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])
                         w, h = x2 - x, y2 - y
                         y_center = int(min(max(y + h / 2, 0), distance_map.shape[0] - 1))
@@ -411,7 +411,7 @@ if option == "Importer une image":
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], frame.shape).round()
                 for *xyxy, conf, cls in reversed(det):
                     label = f'{classes[int(cls)]} : {conf:.2f}'
-                    color = (0, 255, 0)
+                    color = (255, 255, 153)
                     x, y, x2, y2 = int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])
                     w, h = x2 - x, y2 - y
                     frame = cv2.rectangle(frame, (x, y), (x2, y2), color, thickness=3)
@@ -539,7 +539,7 @@ if option == "Importer une vidéo":
                         det[:, :4] = scale_coords(img.shape[2:], det[:, :4], frame.shape).round()
                         for *xyxy, conf, cls in reversed(det):
                             label = f'{classes[int(cls)]} : {conf:.2f}'
-                            color = (0, 255, 0)
+                            color = (255, 255, 153) 
                             x, y, x2, y2 = int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])
                             w, h = x2 - x, y2 - y
                             frame = cv2.rectangle(frame, (x, y), (x2, y2), color, thickness=3)
