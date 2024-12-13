@@ -32,18 +32,17 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    bash -c "
                     source venv/bin/activate
                     if [ ! -f yolov7/modele_a.pt ]; then
                         echo "Le fichier modèle yolov7/modele_a.pt est introuvable. Veuillez l'ajouter avant de relancer le pipeline."
                         exit 1
                     fi
                     export PYTHONPATH=$PYTHONPATH:/var/lib/jenkins/workspace/projet\\ pfe
-                    pytest test_object_detection.py -p no:warnings --junitxml=results.xml"
+                    pytest test_object_detection.py -p no:warnings --junitxml=results.xml
                     '''
                 }
             }
-        }
+}
 
 
 
