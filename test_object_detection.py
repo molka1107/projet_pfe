@@ -9,8 +9,13 @@ import cv2
 import pytest
 
 
+def load_class_names(names_path):
+    with open(names_path, "r") as f:
+        class_names = [line.strip() for line in f.readlines()]
+    return class_names
+
+
 def load_model():
-    # Charger le modèle YOLOv7
     model_path = 'yolov7/modele_a.pt'  
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = attempt_load(model_path, map_location=device)
@@ -20,11 +25,9 @@ def load_model():
 
 
 def detect_objects(model, device, image_path):
-    # Charger l'image
     img = cv2.imread(image_path)
     if img is None: 
         raise FileNotFoundError(f"Image non trouvée ou invalide : {image_path}")
-
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img_resized = letterbox(img, new_shape=(320, 320))[0]  
     img_resized = img_resized.transpose((2, 0, 1)) 
@@ -33,7 +36,7 @@ def detect_objects(model, device, image_path):
     # Prétraiter l'image
     img_tensor = torch.from_numpy(img_resized).to(device)
     img_tensor = img_tensor.half() / 255.0  
-    if img_tensor.ndimension() == 3:
+    if img_tensor.ndimension() == 3 :
         img_tensor = img_tensor.unsqueeze(0)
 
     # Inférence avec YOLOv7
@@ -43,7 +46,6 @@ def detect_objects(model, device, image_path):
     objects = []
     for det in pred:  
         if len(det):
-            # Redimensionner les coordonnées vers l'image originale
             det[:, :4] = scale_coords(img_tensor.shape[2:], det[:, :4], img.shape).round()
             for *xyxy, conf, cls in reversed(det):
                 objects.append({
@@ -56,16 +58,21 @@ def detect_objects(model, device, image_path):
 
 
 def test_load_model():
-    model= load_model()
+    model, device = load_model()
     assert model is not None, "Le modèle n'a pas pu être chargé."
+    assert device is not None, "Le dispositif (CPU/GPU) n'a pas pu être initialisé."
 
 
 def test_detect_objects():
     # Chargez le modèle
     model, device = load_model()
 
-    # Chemin d'une image d'exemple (assurez-vous que cette image existe dans votre projet)
-    image_path = "/home/molka/Bureau/stage/projet_pfe/person.jpg"  
+    # Charger les noms des classes
+    class_names = load_class_names("/home/molka/Bureau/stage/projet_pfe/classes.txt")
+
+
+    # Chemin d'une image d'exemple
+    image_path = "/home/molka/Bureau/stage/projet_pfe/person.jpg"
 
     # Détectez les objets
     objects = detect_objects(model, device, image_path)
@@ -79,14 +86,19 @@ def test_detect_objects():
         assert "score" in obj, "Le champ 'score' est manquant dans les résultats."
         assert "class" in obj, "Le champ 'class' est manquant dans les résultats."
 
-    valid_classes = range(0, 25) 
+    # Validez les noms des classes
     for obj in objects:
-        assert obj["class"] in valid_classes, f"Classe détectée invalide : {obj['class']}."
+        class_idx = obj["class"]
+        # Vérifiez que l'indice de classe est valide
+        assert 0 <= class_idx < len(class_names), f"Indice de classe invalide : {class_idx}"
+        detected_class_name = class_names[class_idx]
+        assert detected_class_name in class_names, f"Classe détectée invalide : {detected_class_name}"
 
     # Vérifiez que les scores de confiance sont supérieurs à un seuil
     confidence_threshold = 0.25
     for obj in objects:
-        assert obj["score"] >= confidence_threshold, f"Score de confiance : {obj['score']}."
+        assert obj["score"] >= confidence_threshold, f"Score de confiance trop faible : {obj['score']}."
+
 
 def test_detect_objects_invalid_image():
     # Chargez le modèle

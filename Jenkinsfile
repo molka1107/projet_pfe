@@ -28,6 +28,19 @@ pipeline {
             }
         }
 
+        stage('Run Test') {
+            steps {
+                script {
+                    sh '''
+                    bash -c "
+                    source venv/bin/activate
+                    pytest test_object_detection.py -p no:warnings --junitxml=results.xml
+                    "
+                    '''
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -94,6 +107,9 @@ pipeline {
 
     post {
         always {
+            
+            junit 'results.xml' 
+
             emailext (
                 subject: "Notification de pipeline pour le projet",
                 body: """
