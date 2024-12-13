@@ -16,7 +16,7 @@ def load_class_names(names_path):
 
 
 def load_model():
-    model_path = '/home/molka/Bureau/stage/projet_pfe/yolov7/modele_a.pt'  
+    model_path = 'yolov7/modele_a.pt'  
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Le fichier modèle {model_path} est introuvable.")
     
@@ -25,7 +25,6 @@ def load_model():
     model.eval()
     model.half()
     return model, device
-
 
 
 def detect_objects(model, device, image_path):

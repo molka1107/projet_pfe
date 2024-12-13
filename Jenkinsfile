@@ -32,20 +32,33 @@ pipeline {
                 steps {
                     script {
                         sh '''
-                        bash -c "
+                        #!/bin/bash
+                        set -e
                         cd /home/molka/Bureau/stage/projet_pfe
-                        source venv/bin/activate
+
+                        # Vérifier si l'environnement virtuel existe, sinon le recréer
+                        if [ ! -d "venv" ]; then
+                            echo "Environnement virtuel introuvable. Création en cours..."
+                            python3.9 -m venv venv
+                            source venv/bin/activate
+                            pip install -r requirements.txt
+                        else
+                            source venv/bin/activate
+                        fi
+
+                        # Vérifier la présence du fichier modèle
                         if [ ! -f yolov7/modele_a.pt ]; then
-                            echo \\"Le fichier modèle yolov7/modele_a.pt est introuvable. Veuillez l'ajouter avant de relancer le pipeline.\\"
+                            echo "Le fichier modèle yolov7/modele_a.pt est introuvable. Veuillez l'ajouter avant de relancer le pipeline."
                             exit 1
                         fi
+
                         export PYTHONPATH=$PYTHONPATH:/home/molka/Bureau/stage/projet_pfe
                         pytest test_object_detection.py -p no:warnings --junitxml=results.xml
-                        "
                         '''
                     }
                 }
-        }
+            }
+
 
         stage('Docker Build') {
             steps {
