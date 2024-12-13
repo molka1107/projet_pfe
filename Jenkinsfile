@@ -28,14 +28,24 @@ pipeline {
             }
         }
 
-
-      stage('Run Tests') {
-            steps {
-                script {
-                    sh 'pytest test_object_detection.py -p no:warnings'
-                }
-            }
+stage('Run Test') {
+    steps {
+        script {
+            sh '''
+            bash -c "
+            source venv/bin/activate
+            if [ ! -f yolov7/modele_a.pt ]; then
+                echo 'Le fichier modèle yolov7/modele_a.pt est introuvable. Veuillez l'ajouter avant de relancer le pipeline.'
+                exit 1
+            fi
+            export PYTHONPATH=$PYTHONPATH:/var/lib/jenkins/workspace/projet\\ pfe
+            pytest test_object_detection.py -p no:warnings --junitxml=results.xml
+            "
+            '''
         }
+    }
+}
+
 
 
         stage('Docker Build') {

@@ -7,7 +7,7 @@ from yolov7.utils.datasets import letterbox
 import numpy as np
 import cv2
 import pytest
-
+import os
 
 def load_class_names(names_path):
     with open(names_path, "r") as f:
@@ -16,12 +16,16 @@ def load_class_names(names_path):
 
 
 def load_model():
-    model_path = 'yolov7/modele_a.pt'  
+    model_path = '/home/molka/Bureau/stage/projet_pfe/yolov7/modele_a.pt'  
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Le fichier modèle {model_path} est introuvable.")
+    
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = attempt_load(model_path, map_location=device)
-    model.eval() 
-    model.half()  
-    return model,device
+    model.eval()
+    model.half()
+    return model, device
+
 
 
 def detect_objects(model, device, image_path):
