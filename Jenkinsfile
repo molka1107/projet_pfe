@@ -29,19 +29,19 @@ pipeline {
         }
 
 
-        stage('Run Test') {
-            steps {
-                script {
-                    sh '''
-                    bash -c "
-                    source venv/bin/activate
-                    export PYTHONPATH=$PYTHONPATH:/home/molka/Bureau/stage/projet_pfe
-                    pytest test_object_detection.py -p no:warnings --junitxml=results.xml
-                    "
-                    '''
-                }
-            }
+       stage('Run Test') {
+    steps {
+        script {
+            sh '''
+            bash -c "
+            source venv/bin/activate
+            export PYTHONPATH=$PYTHONPATH:/var/lib/jenkins/workspace/projet\\ pfe:/var/lib/jenkins/workspace/projet\\ pfe/yolov7
+            pytest test_object_detection.py -p no:warnings --junitxml=results.xml
+            "
+            '''
         }
+    }
+}
 
 
         stage('Docker Build') {
