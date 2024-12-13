@@ -28,13 +28,14 @@ pipeline {
             }
         }
 
-    stage('Run Test') {
+
+        stage('Run Test') {
             steps {
                 script {
                     sh '''
                     bash -c "
                     source venv/bin/activate
-                    export PYTHONPATH=$PYTHONPATH:$(pwd)/yolov7
+                    export PYTHONPATH=$PYTHONPATH:/home/molka/Bureau/stage/projet_pfe
                     pytest test_object_detection.py -p no:warnings --junitxml=results.xml
                     "
                     '''
