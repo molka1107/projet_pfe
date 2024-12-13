@@ -29,18 +29,13 @@ pipeline {
         }
 
 
-       stage('Run Test') {
-    steps {
-        script {
-            sh '''
-            bash -c "
-            source venv/bin/activate
-            pytest test_object_detection.py -p no:warnings 
-            "
-            '''
+      stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest test_object_detection.py -p no:warnings'
+                }
+            }
         }
-    }
-}
 
 
         stage('Docker Build') {
