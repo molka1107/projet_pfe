@@ -34,7 +34,7 @@ pipeline {
                         sh '''
                         bash -c "
                         set -e
-                        cd /home/molka/Bureau/stage/projet_pfe
+                        
 
                         # Vérifier si l'environnement virtuel existe, sinon le recréer
                         if [ ! -d 'venv' ]; then
@@ -46,13 +46,10 @@ pipeline {
                             source venv/bin/activate
                         fi
 
-                        if [ ! -f yolov7/modele_a.pt ]; then
-                            echo \\"Le fichier modèle yolov7/modele_a.pt est introuvable. Veuillez l'ajouter avant de relancer le pipeline.\\"
-                            exit 1
-                        fi
+                        
 
                         export PYTHONPATH=$PYTHONPATH:/home/molka/Bureau/stage/projet_pfe
-                        pytest test_object_detection.py -p no:warnings --junitxml=results.xml
+                        pytest /home/molka/Bureau/stage/projet_pfe/test_object_detection.py -p no:warnings --junitxml=results.xml
                         "
                         '''
                     }
