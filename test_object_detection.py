@@ -9,6 +9,7 @@ import cv2
 import pytest
 import os
 
+
 def load_class_names(names_path):
     with open(names_path, "r") as f:
         class_names = [line.strip() for line in f.readlines()]
@@ -113,5 +114,4 @@ def test_detect_objects_invalid_image():
     # Vérifiez que l'erreur est levée pour une image inexistante
     with pytest.raises(FileNotFoundError):
         detect_objects(model, device, invalid_image_path)
-
 
