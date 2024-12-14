@@ -33,21 +33,8 @@ pipeline {
                     script {
                         sh '''
                         bash -c "
-                        set -e
-                        
-
-                        # Vérifier si l'environnement virtuel existe, sinon le recréer
-                        if [ ! -d 'venv' ]; then
-                            echo \\"Environnement virtuel introuvable. Création en cours...\\"
-                            python3.9 -m venv venv
-                            source venv/bin/activate
-                            pip install -r requirements.txt
-                        else
-                            source venv/bin/activate
-                        fi
-
-                        
-
+                        set -e     
+                        source venv/bin/activate
                         export PYTHONPATH=$PYTHONPATH:/home/molka/Bureau/stage/projet_pfe
                         pytest /home/molka/Bureau/stage/projet_pfe/test_object_detection.py -p no:warnings --junitxml=results.xml
                         "
