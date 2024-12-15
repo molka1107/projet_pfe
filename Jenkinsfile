@@ -97,14 +97,7 @@ pipeline {
                     sh "docker start grafana"
                 }
             }
-        }
-
-       
-  
-
-    
-
-      
+        }      
     }
 
     post {
@@ -128,5 +121,4 @@ pipeline {
             )
         }
 }
-
 }
